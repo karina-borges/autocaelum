@@ -6,20 +6,20 @@ import useValidations from '../../hooks/useValidations';
 import useFormValidator from '../../hooks/useFormValidator';
 
 export default function ContatoPage() {
+    const { isEmail, isEmpty, isTelefoneOuCelular } = useValidations();
+    const { errors, isFormValid, validate } = useFormValidator({
+        nome: isEmpty('Nome é obrigatório!'),
+        email: isEmail('E-mail inválido!'),
+        telefone: isTelefoneOuCelular('Telefone inválido!', false),
+        assunto: isEmpty('Assunto é obrigatório!'),
+        mensagem: isEmpty('Mensagem é obrigatória!')
+    });
+
     const inputNome = useRef();
     const inputEmail = useRef();
     const inputTel = useRef();
     const inputAssunto = useRef();
     const inputMensagem = useRef();
-    const {isEmpty, isEmail, isTelefoneOuCelular} = useValidations()
-
-    const {errors, isFormValid, validate} = useFormValidator({
-        nome: isEmpty('Nome é obrigatório'),
-        email: isEmail('Digite um email válido'),
-        telefone: isTelefoneOuCelular('Digite um celular válido', false),
-        assunto: isEmpty('Assunto é obrigatório'),
-        mensagem: isEmpty('Mensagem é obrigatório')
-    })
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -29,12 +29,7 @@ export default function ContatoPage() {
         let assunto = inputAssunto.current.value.trim();
         let msg = inputMensagem.current.value.trim();
 
-        if (!nome || !email || !assunto || !msg) {
-            alert('Por favor, preencha os campos obrigatórios do formulário!');
-        }
-        else {
-            alert('Mensagem enviada com sucesso!');
-        }
+        alert('Mensagem enviada com sucesso!');
     }
 
     return (
@@ -50,27 +45,27 @@ export default function ContatoPage() {
                 <div className="flex">
                     <form onSubmit={ handleSubmit }>
                         <div className="campo">
-                            <input onBlur={validate} type="text" ref={inputNome} name="nome" placeholder="* Seu nome:" />
-                            {errors.nome && <span className="erro">{errors.nome}</span>}
+                            <input type="text" ref={inputNome} onBlur={ validate } name="nome" placeholder="* Seu nome:" />
+                            { errors.nome && <span className="erro">{ errors.nome }</span> }
                         </div>
                         <div className="campo">
-                            <input onBlur={validate} type="text" ref={inputEmail} name="email" placeholder="* Seu e-mail:" />
-                            {errors.email && <span className="erro">{errors.email}</span>}
+                            <input type="text" ref={inputEmail} onBlur={ validate } name="email" placeholder="* Seu e-mail:" />
+                            { errors.email && <span className="erro">{ errors.email }</span> }
                         </div>
                         <div className="campo">
-                            <input onBlur={validate} type="text" ref={inputTel} name="telefone" placeholder="Seu telefone:" />
-                            {errors.telefone && <span className="erro">{errors.telefone}</span>}
+                            <input type="text" ref={inputTel} name="telefone" onBlur={ validate } placeholder="Seu telefone:" />
+                            { errors.telefone && <span className="erro">{ errors.telefone }</span> }
                         </div>
                         <div className="campo">
-                            <input onBlur={validate} type="text" ref={inputAssunto} name="assunto" placeholder="* Assunto da mensagem:" />
-                            {errors.assunto && <span className="erro">{errors.assunto}</span>}
+                            <input type="text" ref={inputAssunto} onBlur={ validate } name="assunto" placeholder="* Assunto da mensagem:" />
+                            { errors.assunto && <span className="erro">{ errors.assunto }</span> }
                         </div>
                         <div className="campo">
-                            <textarea onBlur={validate} ref={inputMensagem} name="mensagem" placeholder="* Digite sua mensagem aqui..."></textarea>
-                            {errors.mensagem && <span className="erro">{errors.mensagem}</span>}
+                            <textarea ref={inputMensagem} onBlur={ validate } name="mensagem" placeholder="* Digite sua mensagem aqui..."></textarea>
+                            { errors.mensagem && <span className="erro">{ errors.mensagem }</span> }
                         </div>
                         <div className="campo">
-                            <button disabled={!isFormValid} className="btn lnk-destaque">
+                            <button disabled={ !isFormValid } className="btn lnk-destaque">
                                 Enviar
                             </button>
                         </div>
