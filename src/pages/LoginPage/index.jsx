@@ -6,10 +6,7 @@ import logo from "../../assets/images/logo-rodape.png";
 import LoginService from "../../services/LoginServices";
 
 export default function LoginPage() {
-  const [state, setState] = useState({ msg: "" });
   const history = useHistory();
-  const renderMsg = () =>
-    state.msg && <div className="alert alert-danger">{state.msg}</div>;
 
   const loginHandler = async (event) => {
     event.preventDefault();
@@ -17,11 +14,9 @@ export default function LoginPage() {
 
     try {
       await LoginService.login(usuario.value, senha.value);
-      setState({ msg: "" });
       console.log("foi");
-      history.push("/");
+      history.push("/admin/veiculos");
     } catch (e) {
-      setState({ msg: e.message });
       console.error(e);
     }
   };
@@ -38,7 +33,6 @@ export default function LoginPage() {
         </a>
       </nav>
       <div className="container my-5">
-        {renderMsg()}
         <form className="card mx-auto w-50" onSubmit={loginHandler}>
           <div className="card-header p-5 text-center">
             <h3 className="h2 mb-0">Área Restrita</h3>

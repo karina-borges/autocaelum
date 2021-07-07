@@ -1,9 +1,46 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import "../../assets/css/bootstrap.min.css";
 import logo from "../../assets/images/logo-rodape.png";
+import VeiculosService from "../../services/VeiculosServices";
+import { formataMoeda } from "../../utils";
 
-export default function VeiculosAdminPage() {
+export default function VeiculosAdminPage(quantidade, randomico) {
+  const [veiculos, setVeiculos] = useState([]);
+
+  useEffect(() => {
+    VeiculosService.getVeiculos(quantidade, randomico).then((listaVeiculos) =>
+      setVeiculos(listaVeiculos)
+    );
+  }, [veiculos]);
+
+  const handleAddVeiculo = async (event) => {
+    event.preventDefault();
+    const { modelo, preco, foto, descricao } = event.target;
+    console.log(modelo.value, preco.value, foto.value, descricao.value);
+    try {
+      await VeiculosService.addVeiculo(
+        modelo.value,
+        preco.value,
+        foto.value,
+        descricao.value
+      );
+      event.target.reset();
+      console.log("foi aqui");
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleDelete = async (veiculoId) => {
+    try {
+      await VeiculosService.deleteVeiculo(veiculoId);
+      console.log("deletou");
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   return (
     <>
       <Helmet>
@@ -33,6 +70,7 @@ export default function VeiculosAdminPage() {
           className="card"
           action=""
           enctype="multipart/form-data"
+          onSubmit={handleAddVeiculo}
         >
           <div className="card-body">
             <div className="row">
@@ -84,24 +122,32 @@ export default function VeiculosAdminPage() {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>
-                <img
-                  src="https://via.placeholder.com/232x129"
-                  width="100"
-                  className="img-responsive"
-                />
-              </td>
-              <td>Chevrolet Corsa</td>
-              <td>R$ 45.000,00</td>
-              <td>Minha descrição completa</td>
-              <td>
-                <button className="btn btn-danger" title="Excluir">
-                  X
-                </button>
-              </td>
-            </tr>
+            {veiculos.map((veiculo) => {
+              return (
+                <tr key={veiculo.id}>
+                  <th scope="row">1</th>
+                  <td>
+                    <img
+                      src={veiculo.foto}
+                      width="100"
+                      className="img-responsive"
+                    />
+                  </td>
+                  <td>{veiculo.modelo}</td>
+                  <td>{formataMoeda(veiculo.preco)}</td>
+                  <td>{veiculo.descricao}</td>
+                  <td>
+                    <button
+                      className="btn btn-danger"
+                      title="Excluir"
+                      onClick={() => handleDelete(veiculo.id)}
+                    >
+                      X
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

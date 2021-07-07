@@ -32,33 +32,5 @@ export default class LoginService {
     }
 
     localStorage.setItem("TOKEN", token);
-
-    // const dadosLogin = { login, senha };
-    //   const resposta = await fetch(AUTOCAELUM_API + "/usuarios/login", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-type": "application/json",
-    //     },
-    //     body: {
-    //       usuario,
-    //       senha,
-    //     },
-    //   });
-
-    //   if (!resposta.ok) {
-    //     const resErroServidor = await resposta.json();
-    //     const erro = new Error(resErroServidor.message);
-    //     erro.status = resposta.status;
-    //     throw erro;
-    //   }
-
-    //   const dadosServidor = await resposta.json();
-    //   const token = dadosServidor.token;
-
-    //   if (!token) {
-    //     throw new Error("TOKEN não encontrado!");
-    //   }
-
-    //   localStorage.setItem("TOKEN", token);
   }
 }
